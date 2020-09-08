@@ -67,33 +67,24 @@ router.get('/products/search/:keyword', (req, res) => __awaiter(void 0, void 0, 
     SELECT * 
     FROM datos_descuentos_buscador_prueba_2_0_csv_gz
     WHERE tags LIKE LOWER (${modKey})
-    OR titulo like (${modKey})
+    OR titulo LIKE (${modKey})
     LIMIT 5
   `;
     const findWord = `
-    EXISTS(
-      SELECT * 
-      FROM products_search_log
-      WHERE tags LIKE LOWER (${modKey})
-      OR titulo like (${modKey})
-      AND NOT EXISTS (
-        SELECT * 
-        FROM tags_search_log
-        WHERE tags LIKE LOWER (${modKey})
-        OR titulo like (${modKey})
-      )
-    )
+    SELECT * 
+    FROM datos_descuentos_buscador_prueba_2_0_csv_gz
+    WHERE tags LIKE LOWER (${modKey})
   `;
-    const findAndUpdateQuery = `
-    EXSITS(
-      UPDATE products_search_log
-      SET @count := +1 as count
-      WHERE products LIKE LOWER(${modKey})
-      AND NOT EXISTS (INSERT INTO product_search_log (name, count) VALUES ( ${modKey} , +1 ); )
-    )
-   
-`;
-    const searchAndUpdate = (query) => {
+    const findAndUpdate = (table) => `
+    SELECT @id:=id AS id, name, count
+    FROM ${table}
+    WHERE name = ${modKey};
+    
+    INSERT INTO ${table} (id, name, count) VALUES (@id, ${keyword}, +1)
+    ON DUPLICATE KEY UPDATE count = count + 1;
+    SELECT * FROM ${table}
+  `;
+    const queryHandler = (query) => {
         mysql_1.default.execQuery(query, (err, product) => {
             if (err) {
                 res.status(400).json({
@@ -110,10 +101,13 @@ router.get('/products/search/:keyword', (req, res) => __awaiter(void 0, void 0, 
             }
         });
     };
-    const checkquery = searchAndUpdate(findWord);
-    // if (checkquery.length >= 1) {
-    //   console.log('yay')
-    // }
-    searchAndUpdate(searchQuery);
+    const checkTags = yield queryHandler(searchQuery);
+    if (checkTags()) {
+        console.log('yay', checkTags);
+        queryHandler(findAndUpdate('product_search_logs'));
+    }
+    else {
+        console.log('ney', checkTags);
+    }
 }));
 exports.default = router;
