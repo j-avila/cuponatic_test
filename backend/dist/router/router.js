@@ -101,13 +101,13 @@ router.get('/products/search/:keyword', (req, res) => __awaiter(void 0, void 0, 
             }
         });
     };
-    const checkTags = yield queryHandler(searchQuery);
-    if (checkTags()) {
+    const checkTags = queryHandler(searchQuery);
+    if (yield checkTags) {
         console.log('yay', checkTags);
         queryHandler(findAndUpdate('product_search_logs'));
     }
     else {
-        console.log('ney', checkTags);
+        console.log('ney', queryHandler(searchQuery));
     }
 }));
 exports.default = router;

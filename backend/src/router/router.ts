@@ -98,13 +98,13 @@ router.get('/products/search/:keyword', async (req: Request, res: Response) => {
   }
 
 
-  const checkTags: any = await queryHandler(searchQuery)
+  const checkTags: any = queryHandler(searchQuery)
 
-  if (checkTags()) {
+  if (await checkTags) {
     console.log('yay', checkTags)
     queryHandler(findAndUpdate('product_search_logs'))
   } else {
-    console.log('ney', checkTags)
+    console.log('ney', queryHandler(searchQuery)
   }
 
 

@@ -1,0 +1,15 @@
+FROM node:8.7.0-alpine
+
+RUN mkdir -p /srv/app/cuponatic-server
+WORKDIR /srv/app/cuponatic-server
+
+COPY package.json /srv/app/cuponatic-server
+COPY package-lock.json /srv/app/cuponatic-server
+
+RUN npm install
+
+COPY . /srv/app/cuponatic-server
+
+RUN npm run watch
+
+CMD ["npm", "run", "dev"]

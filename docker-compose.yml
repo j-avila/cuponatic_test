@@ -22,3 +22,16 @@ services:
       - 8080:80
     environment:
       PMA_HOST: db
+
+  # server:
+  #   build: ./backend
+  #   expose:
+  #     - 3000
+  #   environment:
+  #     API_HOST: 'localhost'
+  #     APP_SERVER_PORT: 3000:3000
+  #   ports:
+  #     - 3000
+  #   volumes:
+  #     - ./backend/dist/
+  #   command: npm  run-script build
