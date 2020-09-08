@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const router = express_1.Router();
-router.get('/products', (req, res) => {
+router.get("/products", (req, res) => {
     const amount = req.query.amount || 1000;
     const query = `
     SELECT * 
@@ -26,18 +26,18 @@ router.get('/products', (req, res) => {
         if (err) {
             res.status(400).json({
                 ok: false,
-                error: err
+                error: err,
             });
         }
         else {
             res.json({
                 ok: true,
-                products
+                products,
             });
         }
     });
 });
-router.get('/products/:id', (req, res) => {
+router.get("/products/:id", (req, res) => {
     const id = req.params.id;
     const escapedId = mysql_1.default.instance.connection.escape(id);
     const query = `
@@ -49,18 +49,18 @@ router.get('/products/:id', (req, res) => {
         if (err) {
             res.status(400).json({
                 ok: false,
-                error: err
+                error: err,
             });
         }
         else {
             res.json({
                 ok: true,
-                product: product[0]
+                product: product[0],
             });
         }
     });
 });
-router.get('/products/search/:keyword', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const keyword = req.params.keyword;
     const modKey = "'%" + keyword + "%'";
     const searchQuery = `
@@ -76,12 +76,12 @@ router.get('/products/search/:keyword', (req, res) => __awaiter(void 0, void 0, 
     WHERE tags LIKE LOWER (${modKey})
   `;
     const findAndUpdate = (table) => `
-    SELECT @id:=id AS id, name, count
+    SELECT @id:=id AS id, name, timesCount
     FROM ${table}
     WHERE name = ${modKey};
     
-    INSERT INTO ${table} (id, name, count) VALUES (@id, ${keyword}, +1)
-    ON DUPLICATE KEY UPDATE count = count + 1;
+    INSERT into ${table} (id, name, timesCount) VALUES (@id, ${keyword}, 1)
+    ON DUPLICATE KEY UPDATE timesCount = timesCount + 1;
     SELECT * FROM ${table}
   `;
     const queryHandler = (query) => {
@@ -89,25 +89,18 @@ router.get('/products/search/:keyword', (req, res) => __awaiter(void 0, void 0, 
             if (err) {
                 res.status(400).json({
                     ok: false,
-                    error: err
+                    error: err,
                 });
             }
             else {
                 res.json({
                     ok: true,
                     keyword,
-                    product: product[0]
+                    product: product[0],
                 });
             }
         });
     };
-    const checkTags = queryHandler(searchQuery);
-    if (yield checkTags) {
-        console.log('yay', checkTags);
-        queryHandler(findAndUpdate('product_search_logs'));
-    }
-    else {
-        console.log('ney', queryHandler(searchQuery));
-    }
+    queryHandler(searchQuery);
 }));
 exports.default = router;

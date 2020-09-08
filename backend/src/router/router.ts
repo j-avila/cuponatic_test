@@ -1,11 +1,11 @@
-import { Router, Request, Response } from 'express'
-import MySQL from '../mysql/mysql';
-import { escapeId } from 'mysql';
+import { Router, Request, Response } from "express";
+import MySQL from "../mysql/mysql";
+import { escapeId } from "mysql";
 
-const router = Router()
+const router = Router();
 
-router.get('/products', (req: Request, res: Response) => {
-  const amount = req.query.amount || 1000
+router.get("/products", (req: Request, res: Response) => {
+  const amount = req.query.amount || 1000;
   const query = `
     SELECT * 
     FROM datos_descuentos_buscador_prueba_2_0_csv_gz
@@ -16,21 +16,20 @@ router.get('/products', (req: Request, res: Response) => {
     if (err) {
       res.status(400).json({
         ok: false,
-        error: err
-      })
+        error: err,
+      });
     } else {
       res.json({
         ok: true,
-        products
-      })
+        products,
+      });
     }
-  })
+  });
+});
 
-})
-
-router.get('/products/:id', (req: Request, res: Response) => {
-  const id = req.params.id
-  const escapedId = MySQL.instance.connection.escape(id)
+router.get("/products/:id", (req: Request, res: Response) => {
+  const id = req.params.id;
+  const escapedId = MySQL.instance.connection.escape(id);
 
   const query = `
     SELECT * 
@@ -42,20 +41,20 @@ router.get('/products/:id', (req: Request, res: Response) => {
     if (err) {
       res.status(400).json({
         ok: false,
-        error: err
-      })
+        error: err,
+      });
     } else {
       res.json({
         ok: true,
-        product: product[0]
-      })
+        product: product[0],
+      });
     }
-  })
-})
+  });
+});
 
-router.get('/products/search/:keyword', async (req: Request, res: Response) => {
-  const keyword = req.params.keyword
-  const modKey = "'%" + keyword + "%'"
+router.get("/products/search/:keyword", async (req: Request, res: Response) => {
+  const keyword = req.params.keyword;
+  const modKey = "'%" + keyword + "%'";
 
   const searchQuery = `
     SELECT * 
@@ -63,53 +62,41 @@ router.get('/products/search/:keyword', async (req: Request, res: Response) => {
     WHERE tags LIKE LOWER (${modKey})
     OR titulo LIKE (${modKey})
     LIMIT 5
-  `
+  `;
   const findWord = `
     SELECT * 
     FROM datos_descuentos_buscador_prueba_2_0_csv_gz
     WHERE tags LIKE LOWER (${modKey})
-  `
+  `;
 
   const findAndUpdate = (table: string) => `
-    SELECT @id:=id AS id, name, count
+    SELECT @id:=id AS id, name, timesCount
     FROM ${table}
     WHERE name = ${modKey};
     
-    INSERT INTO ${table} (id, name, count) VALUES (@id, ${keyword}, +1)
-    ON DUPLICATE KEY UPDATE count = count + 1;
+    INSERT into ${table} (id, name, timesCount) VALUES (@id, ${keyword}, 1)
+    ON DUPLICATE KEY UPDATE timesCount = timesCount + 1;
     SELECT * FROM ${table}
-  `
+  `;
 
   const queryHandler = (query: string) => {
     MySQL.execQuery(query, (err: any, product: object[]) => {
       if (err) {
         res.status(400).json({
           ok: false,
-          error: err
-        })
+          error: err,
+        });
       } else {
         res.json({
           ok: true,
           keyword,
-          product: product[0]
-        })
+          product: product[0],
+        });
       }
-    })
-  }
+    });
+  };
 
+  queryHandler(searchQuery);
+});
 
-  const checkTags: any = queryHandler(searchQuery)
-
-  if (await checkTags) {
-    console.log('yay', checkTags)
-    queryHandler(findAndUpdate('product_search_logs'))
-  } else {
-    console.log('ney', queryHandler(searchQuery)
-  }
-
-
-
-})
-
-
-export default router 
+export default router;

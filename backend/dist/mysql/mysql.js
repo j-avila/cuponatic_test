@@ -7,13 +7,13 @@ const mysql_1 = __importDefault(require("mysql"));
 class MySQL {
     constructor() {
         this.connected = false;
-        console.log('class initialized');
+        console.log("class initialized");
         this.connection = mysql_1.default.createConnection({
-            host: 'localhost',
+            host: "localhost",
             port: 6603,
-            user: 'root',
-            password: 'root',
-            database: 'cuponatic'
+            user: "root",
+            password: "root",
+            database: "cuponatic",
         });
         this.connectDB();
     }
@@ -23,12 +23,11 @@ class MySQL {
     static execQuery(query, callback) {
         this.instance.connection.query(query, (err, results, fields) => {
             if (err) {
-                console.log('error en el query po');
-                console.log(err);
+                console.log("error en el query po");
                 return callback(err);
             }
             if (results.length === 0) {
-                callback('El registro esta vacio');
+                callback("El registro esta vacio");
             }
             else {
                 callback(null, results);
@@ -42,7 +41,7 @@ class MySQL {
                 return;
             }
             this.connected = true;
-            console.log('database connected!');
+            console.log("database connected!");
         });
     }
 }
