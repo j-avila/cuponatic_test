@@ -1,0 +1,84 @@
+@import '../../index.scss';
+
+#product-card {
+	@include card(100%, 45%, true);
+	display: flex;
+	height: 280px;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0;
+	overflow: hidden;
+	border-radius: 12px;
+	.picture {
+		flex-grow: 1;
+		flex-basis: 120px;
+		max-width: 200px;
+		overflow: hidden;
+		height: 100%;
+		img {
+			width: fit-content;
+			height: 100%;
+			margin: 0 -25% 0 -113%;
+		}
+	}
+	.desc {
+		flex-grow: 2;
+		flex-basis: 200px;
+		font-size: small;
+		align-self: flex-start;
+		padding: 0 10px;
+		text-align: left;
+		span {
+			display: block;
+			margin-bottom: 1rem;
+			color: $secondary;
+			i {
+				display: inline;
+				font-size: small;
+			}
+		}
+		p {
+			display: block;
+			display: -webkit-box;
+			text-align: left;
+			max-width: 100%;
+			height: 43px;
+			margin: 0 auto;
+			font-size: 14px;
+			line-height: 1;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		strong {
+			display: block;
+			margin: 10px 0;
+			color: lighten($text, 40%);
+			font-size: small;
+		}
+	}
+	.chip {
+		padding: 4px 8px;
+		background: $background;
+		margin: 6px 4px;
+		border-radius: 20px;
+		font-size: xx-small;
+		i {
+			color: $secondary;
+			font-weight: bold;
+			margin-left: 8px;
+			font-size: xx-small !important;
+		}
+	}
+
+	@media all and (max-width: 768px) {
+		width: 100%;
+		max-width: 500px;
+	}
+}

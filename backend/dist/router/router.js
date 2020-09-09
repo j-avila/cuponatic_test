@@ -20,6 +20,7 @@ router.get("/products", (req, res) => {
     const query = `
     SELECT * 
     FROM datos_descuentos_buscador_prueba_2_0_csv_gz
+    ORDER by vendidos DESC
     LIMIT ${amount} 
   `;
     mysql_1.default.execQuery(query, (err, products) => {
@@ -85,7 +86,7 @@ router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, 
     SELECT * FROM ${table}
   `;
     const queryHandler = (query) => {
-        mysql_1.default.execQuery(query, (err, product) => {
+        mysql_1.default.execQuery(query, (err, products) => {
             if (err) {
                 res.status(400).json({
                     ok: false,
@@ -96,7 +97,7 @@ router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, 
                 res.json({
                     ok: true,
                     keyword,
-                    product: product[0],
+                    product: products,
                 });
             }
         });
