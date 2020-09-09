@@ -9,6 +9,7 @@ router.get("/products", (req: Request, res: Response) => {
   const query = `
     SELECT * 
     FROM datos_descuentos_buscador_prueba_2_0_csv_gz
+    ORDER by vendidos DESC
     LIMIT ${amount} 
   `;
 
@@ -80,7 +81,7 @@ router.get("/products/search/:keyword", async (req: Request, res: Response) => {
   `;
 
   const queryHandler = (query: string) => {
-    MySQL.execQuery(query, (err: any, product: object[]) => {
+    MySQL.execQuery(query, (err: any, products: object[]) => {
       if (err) {
         res.status(400).json({
           ok: false,
@@ -90,7 +91,7 @@ router.get("/products/search/:keyword", async (req: Request, res: Response) => {
         res.json({
           ok: true,
           keyword,
-          product: product[0],
+          product: products,
         });
       }
     });

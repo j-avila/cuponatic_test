@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = __importDefault(require("./server/server"));
 const router_1 = __importDefault(require("./router/router"));
 const mysql_1 = __importDefault(require("./mysql/mysql"));
+const cors = require("cors");
 const server = server_1.default.init(3030);
+server.app.use(cors());
 server.app.use(router_1.default);
 // MySQL instance
 mysql_1.default.instance;
