@@ -1,0 +1,55 @@
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: #f9f5ef;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
+
+input {
+	&:focus {
+		border: 0;
+	}
+	&:active {
+		border: 0;
+	}
+}
+
+// colors
+$primary: #0061ff;
+$secondary: #ff6b00; //highlight
+$surface: #ff6b00; //highlight
+$error: tomato; //highlight
+$background: #e6efff;
+
+// mixins
+@mixin card($width, $max-width, $hover) {
+	padding: 1rem;
+	border-radius: 8px;
+	box-shadow: 1px 1px 2px rgba(54, 54, 54, 0.315);
+	background: #ffffff;
+	@if $width {
+		width: $width;
+	} @else {
+		width: 100%;
+	}
+	max-width: $max-width;
+	margin: 0 auto;
+	position: relative;
+	margin-top: 10vh;
+	transition: all 0.5s ease;
+
+	@if $hover {
+		&:hover {
+			transition: all 0.5s ease;
+			box-shadow: 2px 6px 8px rgba(121, 121, 121, 0.335);
+		}
+	}
+}

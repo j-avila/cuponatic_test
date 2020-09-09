@@ -1,0 +1,71 @@
+@import '../../index.scss';
+
+#searchbar {
+	position: relative;
+	width: 100%;
+	.input-search {
+		width: 80%;
+		max-width: 900px;
+		margin: 0 auto;
+		display: flex;
+		// padding: 8px 12px;
+		border-radius: 8px;
+		border: 1px solid $background;
+		overflow: hidden;
+		box-shadow: 1px 1px 3px rgba(109, 109, 109, 0.363);
+		input {
+			width: 100%;
+			padding: 4px 10px;
+			border: 0px !important;
+			margin-left: 10px;
+			outline: 0 !important;
+		}
+		span {
+			background: $primary;
+			color: white;
+			padding: 8px 6px;
+		}
+	}
+	.results {
+		width: 100%;
+		position: absolute;
+		top: 100%;
+		z-index: 10;
+		background: $background;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		padding-left: 0;
+		padding-right: 0;
+		padding: 10px;
+		width: fit-content;
+		border-radius: 0 0 10px 10px;
+		box-shadow: 1px 1px 6px rgba(109, 109, 109, 0.363);
+		display: none;
+		ul {
+			padding-left: 0;
+			margin: 0 auto;
+		}
+		li {
+			@include card(null, 600px, true);
+			display: flex;
+			margin: 10px auto;
+			align-items: center;
+			justify-content: space-between;
+			span {
+				display: block;
+				flex-basis: 60px;
+				flex-grow: 1;
+				img {
+					width: 100%;
+				}
+			}
+			h5 {
+				text-align: left;
+				flex-basis: 120px;
+				flex-grow: 4;
+				padding: 0.5rem;
+			}
+		}
+	}
+}
