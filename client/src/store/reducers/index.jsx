@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import * as types from './types'
+import { products, productSearch } from './products'
 
 const loading = (state = false, action) => {
 	switch (action.type) {
@@ -14,4 +15,6 @@ const loading = (state = false, action) => {
 
 export default combineReducers({
 	loading,
+	products,
+	productSearch,
 })

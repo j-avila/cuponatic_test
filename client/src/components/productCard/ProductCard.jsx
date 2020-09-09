@@ -1,38 +1,38 @@
 import React from 'react'
 import './styles.scss'
 
-export const ProductCard = () => {
+const Chip = ({ tagData }) => {
+	return (
+		<span className='chip'>
+			{tagData}: <i>99999</i>
+		</span>
+	)
+}
+
+export const ProductCard = ({ data }) => {
+	const tags = data.tags.split(',')
 	return (
 		<div id='product-card'>
 			<div className='picture'>
-				<img
-					src='https://cuponassets.cuponatic-latam.com/backendMx/uploads/imagenes_descuentos/33373/44fd1511afff763a5e16eb7a40ff1f069c385621.full.jpg'
-					alt=''
-				/>
+				<img src={data.imagen} alt={data.titulo} />
 			</div>
 			<div className='desc'>
-				<h3>titulo</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem ab
-					molestias quibusdam voluptatibus? Voluptatibus, incidunt ad delectus
-					velit necessitatibus, quis voluptate voluptas impedit laboriosam
-					adipisci minus enim quos eligendi molestias?
-				</p>
+				<h3>{data.titulo}</h3>
+				<span>
+					{data.vendidos} vendidos <i class='material-icons'>thumb_up</i>
+				</span>
+				<p>{data.descripcion}</p>
 				<div className='chips'>
-					<span className='chip'>
-						<i>99999</i>zapato
-					</span>
-					<span className='chip'>
-						<i>99999</i>zapato
-					</span>
-					<span className='chip'>
-						<i>99999</i>zapato
-					</span>
-					<span className='chip'>
-						<i>99999</i>zapato
-					</span>
+					<strong>Búsquedas relacionadas:</strong>
+					<>
+						{tags.map((tag, index) => (
+							<Chip key={index} tagData={tag} />
+						))}
+					</>
 				</div>
 			</div>
 		</div>
 	)
 }
+
+export default ProductCard

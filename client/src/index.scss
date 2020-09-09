@@ -1,33 +1,10 @@
-body {
-	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-		sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	background: #f9f5ef;
-}
-
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-		monospace;
-}
-
-input {
-	&:focus {
-		border: 0;
-	}
-	&:active {
-		border: 0;
-	}
-}
-
 // colors
 $primary: #0061ff;
 $secondary: #ff6b00; //highlight
 $surface: #ff6b00; //highlight
 $error: tomato; //highlight
 $background: #e6efff;
+$text: rgb(32, 32, 32);
 
 // mixins
 @mixin card($width, $max-width, $hover) {
@@ -52,4 +29,62 @@ $background: #e6efff;
 			box-shadow: 2px 6px 8px rgba(121, 121, 121, 0.335);
 		}
 	}
+}
+
+@mixin toast($bg, $color) {
+	margin: 0 auto;
+	max-width: 50vw;
+	text-align: center;
+	padding: 0.4rem 1rem;
+	border-radius: 16px;
+	@if $color {
+		color: $color;
+	} @else {
+		color: white;
+	}
+	@if $bg {
+		background: $bg;
+	} @else {
+		background: tomato;
+	}
+}
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: #f9f5ef;
+	color: $text;
+	p {
+		color: lighten($text, 60%);
+	}
+	h1,
+	h2,
+	h3,
+	h4 {
+		&:first-letter {
+			text-transform: uppercase;
+		}
+	}
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
+
+input {
+	&:focus {
+		border: 0;
+	}
+	&:active {
+		border: 0;
+	}
+}
+
+.toast {
+	@include toast(null, null);
 }

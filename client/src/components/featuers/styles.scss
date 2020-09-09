@@ -4,4 +4,11 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	h1 {
+		color: $text;
+	}
+	@media all and(max-width: 768px) {
+		width: inherit;
+		flex-direction: column;
+	}
 }
