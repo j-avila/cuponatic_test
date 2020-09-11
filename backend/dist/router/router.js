@@ -71,21 +71,8 @@ router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, 
     OR titulo LIKE (${modKey})
     LIMIT 5
   `;
-    const findWord = `
-    SELECT * 
-    FROM datos_descuentos_buscador_prueba_2_0_csv_gz
-    WHERE tags LIKE LOWER (${modKey})
-  `;
-    const findAndUpdate = (table) => `
-    SELECT @id:=id AS id, name, timesCount
-    FROM ${table}
-    WHERE name = ${modKey};
-    
-    INSERT into ${table} (id, name, timesCount) VALUES (@id, ${keyword}, 1)
-    ON DUPLICATE KEY UPDATE timesCount = timesCount + 1;
-    SELECT * FROM ${table}
-  `;
     const queryHandler = (query) => {
+        let arr = [];
         mysql_1.default.execQuery(query, (err, products) => {
             if (err) {
                 res.status(400).json({
@@ -99,9 +86,42 @@ router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, 
                     keyword,
                     product: products,
                 });
+                arr = products;
             }
         });
     };
+    const insertproductLog = `
+  INSERT INTO table_listnames (name, address, tele)
+  SELECT * FROM (SELECT 'Rupert', 'Somewhere', '022') AS tmp
+  WHERE NOT EXISTS (
+      SELECT name FROM table_listnames WHERE name = 'Rupert'
+  ) LIMIT 1;
+  `;
     queryHandler(searchQuery);
 }));
+router.get("/products/count/:key/:id", (req, res) => {
+    const product = req.params.key;
+    const idProduct = req.params.id;
+    console.log(product, idProduct);
+    const findAndCount = (keyword, idProduct) => `CALL findAndCount(${keyword}, ${idProduct})`;
+    const queryHandler = (query) => {
+        let arr = [];
+        mysql_1.default.execQuery(query, (err, products) => {
+            if (err) {
+                res.status(400).json({
+                    ok: false,
+                    error: err,
+                });
+            }
+            else {
+                res.json({
+                    ok: true,
+                    product: products,
+                });
+                arr = products;
+            }
+        });
+    };
+    queryHandler(findAndCount(product, idProduct));
+});
 exports.default = router;

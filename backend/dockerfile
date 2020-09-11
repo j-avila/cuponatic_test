@@ -10,6 +10,5 @@ RUN npm install
 
 COPY . /srv/app/cuponatic-server
 
-RUN npm run watch
 
 CMD ["npm", "run", "dev"]

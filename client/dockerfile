@@ -1,0 +1,14 @@
+FROM node:10.21.0-alpine
+
+RUN mkdir -p /srv/app/cuponatic-client
+WORKDIR /srv/app/cuponatic-client
+
+COPY package.json /srv/app/cuponatic-client
+COPY package-lock.json /srv/app/cuponatic-client
+
+RUN npm install
+
+COPY . /srv/app/cuponatic-client
+
+
+CMD ["npm", "start"]

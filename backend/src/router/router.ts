@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, response } from "express";
 import MySQL from "../mysql/mysql";
 import { escapeId } from "mysql";
 
@@ -64,23 +64,9 @@ router.get("/products/search/:keyword", async (req: Request, res: Response) => {
     OR titulo LIKE (${modKey})
     LIMIT 5
   `;
-  const findWord = `
-    SELECT * 
-    FROM datos_descuentos_buscador_prueba_2_0_csv_gz
-    WHERE tags LIKE LOWER (${modKey})
-  `;
-
-  const findAndUpdate = (table: string) => `
-    SELECT @id:=id AS id, name, timesCount
-    FROM ${table}
-    WHERE name = ${modKey};
-    
-    INSERT into ${table} (id, name, timesCount) VALUES (@id, ${keyword}, 1)
-    ON DUPLICATE KEY UPDATE timesCount = timesCount + 1;
-    SELECT * FROM ${table}
-  `;
 
   const queryHandler = (query: string) => {
+    let arr = [];
     MySQL.execQuery(query, (err: any, products: object[]) => {
       if (err) {
         res.status(400).json({
@@ -93,11 +79,49 @@ router.get("/products/search/:keyword", async (req: Request, res: Response) => {
           keyword,
           product: products,
         });
+        arr = products;
       }
     });
   };
 
+  const insertproductLog = `
+  INSERT INTO table_listnames (name, address, tele)
+  SELECT * FROM (SELECT 'Rupert', 'Somewhere', '022') AS tmp
+  WHERE NOT EXISTS (
+      SELECT name FROM table_listnames WHERE name = 'Rupert'
+  ) LIMIT 1;
+  `;
+
   queryHandler(searchQuery);
+});
+
+router.get("/products/count/:key/:id", (req: Request, res: Response) => {
+  const product = req.params.key;
+  const idProduct = req.params.id;
+  console.log(product, idProduct);
+
+  const findAndCount = (keyword: string, idProduct: any) =>
+    `CALL findAndCount(${keyword}, ${idProduct})`;
+
+  const queryHandler = (query: string) => {
+    let arr = [];
+    MySQL.execQuery(query, (err: any, products: object[]) => {
+      if (err) {
+        res.status(400).json({
+          ok: false,
+          error: err,
+        });
+      } else {
+        res.json({
+          ok: true,
+          product: products,
+        });
+        arr = products;
+      }
+    });
+  };
+
+  queryHandler(findAndCount(product, idProduct));
 });
 
 export default router;
