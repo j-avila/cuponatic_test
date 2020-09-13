@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { searchProducts } from '../../store/actions'
+import { searchProducts, getCount } from '../../store/actions'
 import { useSelector, useDispatch } from 'react-redux'
 import * as type from '../../store/reducers/types'
 import './styles.scss'
@@ -59,6 +59,7 @@ const SearchBar = () => {
 					</div>
 				)}
 			</div>
+			<button onClick={getCount(1)}>click</button>
 		</>
 	)
 }

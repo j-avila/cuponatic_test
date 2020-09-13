@@ -90,22 +90,14 @@ router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, 
             }
         });
     };
-    const insertproductLog = `
-  INSERT INTO table_listnames (name, address, tele)
-  SELECT * FROM (SELECT 'Rupert', 'Somewhere', '022') AS tmp
-  WHERE NOT EXISTS (
-      SELECT name FROM table_listnames WHERE name = 'Rupert'
-  ) LIMIT 1;
-  `;
     queryHandler(searchQuery);
 }));
-router.get("/products/count/:key/:id", (req, res) => {
-    const product = req.params.key;
-    const idProduct = req.params.id;
-    console.log(product, idProduct);
-    const findAndCount = (keyword, idProduct) => `CALL findAndCount(${keyword}, ${idProduct})`;
+router.post("/count", (req, res) => {
+    const product = mysql_1.default.instance.connection.escape(req.query.key);
+    const product_id = mysql_1.default.instance.connection.escape(req.query.id);
+    console.log(product, product_id);
+    const counterProcedure = `CALL findAndCount(${product}, ${product_id})`;
     const queryHandler = (query) => {
-        let arr = [];
         mysql_1.default.execQuery(query, (err, products) => {
             if (err) {
                 res.status(400).json({
@@ -118,10 +110,30 @@ router.get("/products/count/:key/:id", (req, res) => {
                     ok: true,
                     product: products,
                 });
-                arr = products;
             }
         });
     };
-    queryHandler(findAndCount(product, idProduct));
+    queryHandler(counterProcedure);
+});
+router.get("/logs", (req, res) => {
+    const amount = req.query.amount || 1000;
+    const getLogs = `CALL getlogs(${amount})`;
+    const queryHandler = (query) => {
+        mysql_1.default.execQuery(query, (err, logs) => {
+            if (err) {
+                res.status(400).json({
+                    ok: false,
+                    error: err,
+                });
+            }
+            else {
+                res.json({
+                    ok: true,
+                    logs: logs,
+                });
+            }
+        });
+    };
+    queryHandler(getLogs);
 });
 exports.default = router;

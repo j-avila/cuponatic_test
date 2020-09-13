@@ -1,6 +1,5 @@
-import { Router, Request, Response, response } from "express";
+import { Router, Request, Response } from "express";
 import MySQL from "../mysql/mysql";
-import { escapeId } from "mysql";
 
 const router = Router();
 
@@ -84,27 +83,17 @@ router.get("/products/search/:keyword", async (req: Request, res: Response) => {
     });
   };
 
-  const insertproductLog = `
-  INSERT INTO table_listnames (name, address, tele)
-  SELECT * FROM (SELECT 'Rupert', 'Somewhere', '022') AS tmp
-  WHERE NOT EXISTS (
-      SELECT name FROM table_listnames WHERE name = 'Rupert'
-  ) LIMIT 1;
-  `;
-
   queryHandler(searchQuery);
 });
 
-router.get("/products/count/:key/:id", (req: Request, res: Response) => {
-  const product = req.params.key;
-  const idProduct = req.params.id;
-  console.log(product, idProduct);
+router.post("/count", (req: Request, res: Response) => {
+  const product = MySQL.instance.connection.escape(req.query.key);
+  const product_id = MySQL.instance.connection.escape(req.query.id);
+  console.log(product, product_id);
 
-  const findAndCount = (keyword: string, idProduct: any) =>
-    `CALL findAndCount(${keyword}, ${idProduct})`;
+  const counterProcedure = `CALL findAndCount(${product}, ${product_id})`
 
   const queryHandler = (query: string) => {
-    let arr = [];
     MySQL.execQuery(query, (err: any, products: object[]) => {
       if (err) {
         res.status(400).json({
@@ -116,12 +105,34 @@ router.get("/products/count/:key/:id", (req: Request, res: Response) => {
           ok: true,
           product: products,
         });
-        arr = products;
       }
     });
   };
 
-  queryHandler(findAndCount(product, idProduct));
+  queryHandler(counterProcedure);
+});
+
+router.get("/logs", (req: Request, res: Response) => {
+  const amount = req.query.amount || 1000;
+  const getLogs = `CALL getlogs(${amount})`;
+
+  const queryHandler = (query: string) => {
+    MySQL.execQuery(query, (err: any, logs: object[]) => {
+      if (err) {
+        res.status(400).json({
+          ok: false,
+          error: err,
+        });
+      } else {
+        res.json({
+          ok: true,
+          logs: logs,
+        });
+      }
+    });
+  };
+
+  queryHandler(getLogs);
 });
 
 export default router;

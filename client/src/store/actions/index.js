@@ -53,3 +53,24 @@ export const searchProducts = product => {
 			})
 	}
 }
+
+export const getCount = amount => {
+	const url = `${apiURL}/logs?amount=${amount}`
+
+	return async dispatch => {
+		// dispatch(loadingStatus(true));
+		await Axios.post(url, options)
+			.then(({ data }) => {
+				console.log(data)
+				// dispatch({
+				// 	type: type.FETCH_SEARCH,
+				// 	payload: data,
+				// })
+				// dispatch(loadingStatus(false));
+			})
+			.catch(error => {
+				console.log(error)
+				// dispatch(loadingStatus(false));
+			})
+	}
+}
