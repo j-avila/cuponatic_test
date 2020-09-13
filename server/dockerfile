@@ -8,7 +8,9 @@ COPY package-lock.json /srv/app/cuponatic-server
 
 RUN npm install
 
-COPY . /srv/app/cuponatic-server
+USER node
+
+COPY . /srv/app/cuponatic-server/
 
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "/dist/index.js"]

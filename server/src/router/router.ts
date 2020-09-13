@@ -86,12 +86,24 @@ router.get("/products/search/:keyword", async (req: Request, res: Response) => {
   queryHandler(searchQuery);
 });
 
-router.post("/count", (req: Request, res: Response) => {
+router.get("/count", (req: Request, res: Response) => {
   const product = MySQL.instance.connection.escape(req.query.key);
   const product_id = MySQL.instance.connection.escape(req.query.id);
   console.log(product, product_id);
 
   const counterProcedure = `CALL findAndCount(${product}, ${product_id})`
+
+  const counterQuery = `
+    SELECT @id:=id, name, product_id, counter
+    FROM product_search_logs
+    WHERE name = ${product};
+
+    INSERT INTO product_search_logs(id, name, product_id, counter)  
+        VALUES (@id, ${product}, ${product_id}, 1)
+        ON DUPLICATE KEY UPDATE counter = counter + 1;
+        
+    SELECT * FROM product_search_logs;
+  `
 
   const queryHandler = (query: string) => {
     MySQL.execQuery(query, (err: any, products: object[]) => {
