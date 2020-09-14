@@ -35,8 +35,6 @@ export const fetchProducts = () => {
 }
 
 export const searchProducts = product => {
-	const countUrl = (tagName, productId) =>
-		`${apiURL}/count?key=${tagName}&id=${productId}`
 	const url = `${apiURL}/products/search/${product}`
 
 	return async dispatch => {
