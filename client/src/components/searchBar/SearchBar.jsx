@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { searchProducts, getCount } from '../../store/actions'
+import { searchProducts } from '../../store/actions'
 import { useSelector, useDispatch } from 'react-redux'
 import * as type from '../../store/reducers/types'
 import './styles.scss'
@@ -13,7 +12,7 @@ const Product = ({ data }) => {
 			</span>
 			<h5>{data.titulo}</h5>
 			<p>
-				<span class='material-icons'>thumb_up</span>
+				<span className='material-icons'>thumb_up</span>
 				{data.vendidos}
 			</p>
 		</li>
@@ -59,11 +58,9 @@ const SearchBar = () => {
 					</div>
 				)}
 			</div>
-			<button onClick={getCount(1)}>click</button>
+			{/* <button onClick={getCount(1)}>click</button> */}
 		</>
 	)
 }
-
-SearchBar.propTypes = {}
 
 export default SearchBar

@@ -15,7 +15,7 @@ const loadingStatus = status => ({
 })
 
 export const fetchProducts = () => {
-	const url = `${apiURL}/products?amount=20`
+	const url = `${apiURL}/products?amount=50`
 
 	return async dispatch => {
 		dispatch(loadingStatus(true))
@@ -23,7 +23,7 @@ export const fetchProducts = () => {
 			.then(({ data }) => {
 				dispatch({
 					type: type.FETCH_DATA,
-					payload: data,
+					payload: data.products,
 				})
 				dispatch(loadingStatus(false))
 			})
@@ -35,6 +35,8 @@ export const fetchProducts = () => {
 }
 
 export const searchProducts = product => {
+	const countUrl = (tagName, productId) =>
+		`${apiURL}/count?key=${tagName}&id=${productId}`
 	const url = `${apiURL}/products/search/${product}`
 
 	return async dispatch => {
@@ -54,19 +56,18 @@ export const searchProducts = product => {
 	}
 }
 
-export const getCount = amount => {
-	const url = `${apiURL}/logs?amount=${amount}`
+export const getPopular = () => {
+	const url = `${apiURL}/popular?amount=20`
 
 	return async dispatch => {
-		// dispatch(loadingStatus(true));
-		await Axios.post(url, options)
+		dispatch(loadingStatus(true))
+		await Axios.get(url, options)
 			.then(({ data }) => {
-				console.log(data)
-				// dispatch({
-				// 	type: type.FETCH_SEARCH,
-				// 	payload: data,
-				// })
-				// dispatch(loadingStatus(false));
+				dispatch({
+					type: type.POPULAR_PRODUCTS,
+					payload: data.bestSellers,
+				})
+				dispatch(loadingStatus(false))
 			})
 			.catch(error => {
 				console.log(error)

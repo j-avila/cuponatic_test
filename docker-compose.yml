@@ -23,33 +23,33 @@ services:
     environment:
       PMA_HOST: db
 
-  server:
-    build: ./server
-    expose:
-      - ${APP_SERVER_PORT}
-    environment:
-      API_HOST: ${API_HOST}
-      APP_SERVER_PORT: ${APP_SERVER_PORT}:${APP_SERVER_PORT}
-    ports:
-      - 8081:81
-    volumes:
-      - ./server/src:/srv/app/cuponatic-server/src
-    depends_on:
-      - db
-    command: npm run-script start
+  # server:
+  #   build: ./server
+  #   expose:
+  #     - ${APP_SERVER_PORT}
+  #   environment:
+  #     API_HOST: ${API_HOST}
+  #     APP_SERVER_PORT: ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+  #   ports:
+  #     - 8081:81
+  #   volumes:
+  #     - ./server/src:/srv/app/cuponatic-server/src
+  #   depends_on:
+  #     - db
+  #   command: npm run-script start
 
-  client:
-    build: ./client
-    stdin_open: true
-    expose:
-      - ${REACT_APP_PORT}
-    environment:
-      REACT_APP_PORT: ${REACT_APP_PORT}
-    ports:
-      - ${REACT_APP_PORT}:${REACT_APP_PORT}
-    volumes:
-      - ./client/src:/srv/app/cuponatic-client/src
-      - ./client/public:/srv/app/cuponatic-client/public
-    links:
-      - server
-    command: npm start
+  # client:
+  #   build: ./client
+  #   stdin_open: true
+  #   expose:
+  #     - ${REACT_APP_PORT}
+  #   environment:
+  #     REACT_APP_PORT: ${REACT_APP_PORT}
+  #   ports:
+  #     - ${REACT_APP_PORT}:${REACT_APP_PORT}
+  #   volumes:
+  #     - ./client/src:/srv/app/cuponatic-client/src
+  #     - ./client/public:/srv/app/cuponatic-client/public
+  #   links:
+  #     - server
+  #   command: npm start

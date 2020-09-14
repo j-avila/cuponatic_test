@@ -1,0 +1,21 @@
+@import '../../index.scss';
+#feat-holder {
+	h1 {
+		color: $text;
+	}
+	h2 {
+		color: lighten($text, 60%);
+		span {
+			font-weight: 100;
+		}
+	}
+	#feats {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+	}
+	@media all and(max-width: 768px) {
+		width: inherit;
+		flex-direction: column;
+	}
+}

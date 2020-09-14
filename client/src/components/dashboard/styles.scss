@@ -1,17 +1,63 @@
-@import "../../index.scss";
+@import '../../index.scss';
 
 #dashboard {
-  display: grid;
-  grid-template-columns: 1fr;
-  @include card(90vw, 1200px, false);
-  margin-bottom: 5vh;
-  .charts {
-    margin-top: 2rem;
-    width: 100%;
-    height: 40vh;
-  }
-  @media all and (max-width: 768px) {
-    width: 90vw;
-    max-width: unset;
-  }
+	display: grid;
+	grid-template-columns: 1fr;
+	@include card(90vw, 1200px, false);
+	margin-bottom: 5vh;
+	header {
+		display: grid;
+		margin: 0 auto;
+		max-width: 600px;
+		grid-template-columns: 0.5fr 2fr;
+		column-gap: 10px;
+	}
+	.menu {
+		display: flex;
+		list-style: none;
+		max-width: 400px;
+		margin: 3rem auto;
+		justify-content: space-between;
+		li {
+			&:nth-child(1) {
+				a {
+					border-radius: 2rem 0 0 2rem;
+				}
+			}
+			&:nth-child(2) {
+				a {
+					border-radius: 0 2rem 2rem 0;
+				}
+			}
+			a {
+				display: block;
+				text-decoration: none;
+				color: white;
+				background: lighten($secondary, 30%);
+				padding: 1rem 2rem;
+				transition: 0.5s all ease ease;
+				span {
+					color: white;
+					display: inline-block;
+					vertical-align: middle;
+					margin-right: 6px;
+				}
+				&:hover {
+					background: darken($secondary, 2%);
+					transition: 0.5s all ease ease;
+				}
+				&.active {
+					background: $secondary;
+					color: lime;
+					span {
+						color: lime;
+					}
+				}
+			}
+		}
+	}
+	@media all and (max-width: 768px) {
+		width: 90vw;
+		max-width: unset;
+	}
 }

@@ -64,13 +64,7 @@ router.get("/products/:id", (req, res) => {
 router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const keyword = req.params.keyword;
     const modKey = "'%" + keyword + "%'";
-    const searchQuery = `
-    SELECT * 
-    FROM datos_descuentos_buscador_prueba_2_0_csv_gz
-    WHERE tags LIKE LOWER (${modKey})
-    OR titulo LIKE (${modKey})
-    LIMIT 5
-  `;
+    const searchProcedure = `CALL searchProducts(${modKey})`;
     const queryHandler = (query) => {
         let arr = [];
         mysql_1.default.execQuery(query, (err, products) => {
@@ -84,30 +78,20 @@ router.get("/products/search/:keyword", (req, res) => __awaiter(void 0, void 0, 
                 res.json({
                     ok: true,
                     keyword,
-                    product: products,
+                    product: products[0],
                 });
                 arr = products;
             }
         });
     };
-    queryHandler(searchQuery);
+    queryHandler(searchProcedure);
+    // setTimeout(() => queryHandler(countQuery), 8000)
+    console.log('anoted!');
 }));
 router.get("/count", (req, res) => {
     const product = mysql_1.default.instance.connection.escape(req.query.key);
     const product_id = mysql_1.default.instance.connection.escape(req.query.id);
-    console.log(product, product_id);
     const counterProcedure = `CALL findAndCount(${product}, ${product_id})`;
-    const counterQuery = `
-    SELECT @id:=id, name, product_id, counter
-    FROM product_search_logs
-    WHERE name = ${product};
-
-    INSERT INTO product_search_logs(id, name, product_id, counter)  
-        VALUES (@id, ${product}, ${product_id}, 1)
-        ON DUPLICATE KEY UPDATE counter = counter + 1;
-        
-    SELECT * FROM product_search_logs;
-  `;
     const queryHandler = (query) => {
         mysql_1.default.execQuery(query, (err, products) => {
             if (err) {
@@ -126,11 +110,12 @@ router.get("/count", (req, res) => {
     };
     queryHandler(counterProcedure);
 });
-router.get("/logs", (req, res) => {
-    const amount = req.query.amount || 1000;
-    const getLogs = `CALL getlogs(${amount})`;
+router.get("/popular", (req, res) => {
+    const preAmount = req.query.amount || 100;
+    const amount = mysql_1.default.instance.connection.escape(preAmount);
+    const getBestSellers = `CALL getPopular(${amount})`;
     const queryHandler = (query) => {
-        mysql_1.default.execQuery(query, (err, logs) => {
+        mysql_1.default.execQuery(query, (err, bestSellers) => {
             if (err) {
                 res.status(400).json({
                     ok: false,
@@ -140,11 +125,11 @@ router.get("/logs", (req, res) => {
             else {
                 res.json({
                     ok: true,
-                    logs: logs,
+                    bestSellers: bestSellers[0],
                 });
             }
         });
     };
-    queryHandler(getLogs);
+    queryHandler(getBestSellers);
 });
 exports.default = router;
