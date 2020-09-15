@@ -10,6 +10,7 @@ docker: instalacion (https://docs.docker.com/get-docker/)
 ## para correr el proyecto:
 
 Ejecutar `docker-compose up` para montar el servidor de mysql de phpmyadmin el cual se encuentra en el puerto `:8080`
+un modelo de la base de datos se encuentra en la carpeta db dentro del proyecto, para ser importada. 
 
 Para ejecutar el compilador de typescript en modo watcher utilizar `npm run watch`
 
